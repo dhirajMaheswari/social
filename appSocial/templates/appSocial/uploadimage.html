@@ -1,0 +1,42 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload Image</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"> </script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"> </script>
+</head>
+
+<body>
+
+<div class="container">
+	<center>
+ <div class="py-3">
+  <h1 class="text-center display-4" style="color:white; text-shadow: 2px 4px 10px red"> UPLOAD IMAGES </h1>
+  <hr class="text-center w-40 border-dark">
+ </div>
+<p> Hey {{request.user}}, you can upload image here..</p> 
+<div>
+    <form method = "post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit", class="btn btn-primary">Upload</button>
+    </form>
+<hr class="text-center w-40 border-dark">
+</center>
+</div>
+<div class="container">
+<!-- Django will parse the HTML comments, so any undefined urls will create an issue.
+As such, to write comments in HTML templates, use the Django commets tags
+For single line comment use: {# your-comment-here #}
+For multiline comment, use {% comment %} your-multiline-comment-here {% endcomment %} -->
+<a href="{% url 'display' %}"><span>Display Images</span></a>
+<a href="{% url 'logout' %}"><span>Log out</span></a>
+</div>
+-->
+
+</body>
+</html>

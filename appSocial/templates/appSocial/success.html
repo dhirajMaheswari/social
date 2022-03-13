@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+<<title>Success</title>
+
+{% block body_block %}
+<h4>Account successfully created for {{request.naya_user.username}}...</h4>
+
+<p><a href="{% url 'user_login' %}">Login here</a></p>
+
+{% endblock %}

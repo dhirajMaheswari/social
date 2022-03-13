@@ -1,0 +1,124 @@
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="#" data-toggle="modal" data-target="#myModal1">Comment</a>
+<p style="display:none" id = 'displaynone' value='image_pk'>{{image.pk}}</p>
+
+<!-- The Modal -->
+<div class="modal" id="myModal1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Post Comment</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+  <form action="{% url 'add_comment' pk=image.pk %}"  method="POST" enctype="multipart/form-data" >
+  {{ form_comment|crispy }}
+  {% csrf_token %}
+  <button type="submit" class="btn btn-info btn-sm" name="comment_btn"
+  id='testid' value={{image.pk}}>{{image.pk}}</button>
+</form>
+
+</div>
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+### tooltip form example
+
+<button type="button" class="btn btn-info" data-toggle="tooltip"
+data-placement='right' data-html="true"
+title="<p>{{request.user}}</p>
+<a href='{% url 'display' %}'>Back to display</a>"
+>
+test
+</button>
+
+<script>
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+
+
+<a href="#" data-toggle='tooltip' data-html='true' data-placement='right' title = "
+<div class = 'container'>
+  <p>{{request.user}}</p>
+  <p></p>
+  <p><button type = 'submit' name = 'btn2' class = 'btn btn-primary btn-sm'>Send</p></div>
+">Tooltip test
+</a>
+
+### test to utilize various DOM elements.
+
+choices=[
+('1','One'),
+('2','Two'),
+('3','Three')
+]
+class element_test(forms.Form):
+    name = forms.CharField(required=True, label="",
+    widget=forms.TextInput(attrs={'placeholder':'Your name'}))
+    date = forms.DateField(widget=NumberInput(attrs={'type': 'date'}))
+    age = forms.DecimalField()
+    choice_field = forms.ChoiceField(widget=forms.RadioSelect, choices=choices)
+    choice_field1 = forms.ChoiceField(widget=forms.Select, choices=choices)
+    count = forms.IntegerField(widget=NumberInput(attrs={'type':'range', 'step': '2','min':'-20', 'max':'100',
+    'value':'-5'}))
+    agree = forms.BooleanField()
+
+def home(request):
+    title = "Home"
+    # if request.method == "POST":
+    #     form = element_test(request.POST)
+    #     print("********")
+    #     # print(form)
+    #     print(form['name'].value(), type(form['name'].value()))
+    #     print(form['date'].value(), type(form['date'].value()))
+    #     print(form['age'].value(), type(form['age'].value()))
+    #     print(form['choice_field'].value(), type(form['choice_field'].value()))
+    #     print(choices[int(form['choice_field'].value())-1][1])
+    #     print(form['choice_field1'].value(), type(form['choice_field1'].value()))
+    #     print(form['agree'].value(), type(form['agree'].value()))
+    #     print(form['count'].value(), type(form['count'].value()))
+    #
+    #     return redirect('home')
+    # else:
+    #     form_test = element_test()
+    return render(request, "appSocial/home.html", {'title':title,})
+
+
+
+    @login_required
+    def add_comment_to_post(request, pk):
+        post = Tasveer.objects.get(pk=pk)
+        if request.method == "POST" and 'comment_btn' in request.POST:
+            print(request.POST)
+            print(request.POST['comment_btn'])
+            # post = Tasveer.objects.get(pk=pk)
+            # print("***")
+            # print(post, post.id)
+            form_comment = CommentForm(request.POST)
+            if form_comment.is_valid():
+                # print("yes valid")
+                # comment = Comment(post=post,user=request.user)
+                comment = form_comment.save(commit=False)
+                # print(comment)
+                comment.post = post
+                comment.user = request.user
+
+                comment.save()
+
+                return redirect('display')
+        # else:
+        #     form_comment = CommentForm()
+        # return render(request,"appSocial/display/",{'form_comment':form_comment,})

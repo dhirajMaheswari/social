@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block css_block %}
+<style>
+  .comment-form{
+    width: 250x;
+    border: 1px solid #eee;
+    padding: 30px;
+  }
+
+  .comment-form-alt{
+    width: 250x;
+    border: 1px solid #eee;
+    padding: 5px;
+  }
+
+  .zoom {
+    transition: transform .2s; /* Animation */
+
+
+  }
+
+  .zoom:hover {
+    -ms-transform: scale(2.0); /* IE 9 */
+    -webkit-transform: scale(2.0); /* Safari 3-8 */
+    transform: scale(2.0);
+  }
+
+</style>
+
+{% endblock %}
+
+
+{% block body_block %}
+<div class="container" style="">
+  <div class="row">
+    	<div class="col-lg-4" style = "text-align: left;">
+<h4>Add your comment</h4>
+<div class="comment-form">
+  {% if post.isVideo == 0 %}
+<a href="#">
+<img src="{{ post.your_image.url }}" class="img-responsive zoom"
+               style="width: 70%;  display:auto;" />
+           </a>
+{% else %}
+<video width="280" height="300" autoplay muted controls>
+  <source src="{{MEDIA_URL}}{{post.your_image.url}}" type = "video/mp4">
+Your browser doesn't support video tag.</video>
+{% endif %}
+
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+{{form|crispy}}
+<button type="submit" class='btn btn-primary btn-sm' name="button">Comment</button>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<a href = "{% url 'display' %}" data-toggle="tooltip" title="Go back">
+ <i class ="fa fa-arrow-circle-left" style="font-size:1.2em;" aria-hidden="true"></i>
+</a>
+</form>
+</div>
+</div>
+
+<div class="col-lg-8" style = "text-align: left">
+<h4>Comments</h4>
+{% for comment in allCommentsOnPost %}
+<div class="row">
+  <div class="col-lg-8" style = "text-align:left;">
+  {% if comment.post_id == postid %}
+
+<p class="comment-form-alt" style="border-radius:25px;">
+
+<font color='red'>  {{comment.user}}</font> says on <small>{{comment.created_date|date:"D d M Y"}}</small>:
+  <mark>{{comment.text}}</mark><br>
+     {% if comment.id in allLikedComments_list %}
+  <a href="{% url 'unlike_comment' ck=comment.pk %}">
+     <i class="fa fa-heart" aria-hidden="true"
+     style="font-size:1em;color:red"></i>
+     {% for k,v in allLikedComments_dict.items %}
+     {% if k == comment.id %}
+      {{v}}
+    {% endif %}
+     {% endfor %}
+
+     {% else %}
+     <a href="{% url 'like_comment' ck=comment.pk %}">
+        <i class="far fa-heart" aria-hidden="true"
+        style="font-size:1em;color:red"></i>
+        {% for k,v in allLikedComments_dict.items %}
+        {% if k == comment.id %}
+         {{v}}
+       {% endif %}
+        {% endfor %}
+     {% endif %}
+   </p>
+{% endif %}
+</div>
+</div>
+{% empty %}
+No comments had been made yet.
+{% endfor %}
+</div>
+
+</div>
+</div>
+
+
+{% endblock %}

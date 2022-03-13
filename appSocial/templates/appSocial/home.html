@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}  {{ title }}  {% endblock %}
+
+{% block css_block %}
+<style>
+  .sign_up{
+    width: 550px;
+    border: 1px solid #ccc;
+    padding: 40px;
+    margin-top:80px;
+  }
+
+  .login{
+    width: 550px;
+    border: 1px solid #ccc;
+    padding: 40px;
+  }
+
+</style>
+
+{% endblock %}
+
+{% block body_block %}
+<center>
+<div class="sign_up">
+  <h3>Do whatever you want...</h3><br>
+    But, first you need to <a href="{% url 'signup' %}">Sign up</a>
+
+</div>
+
+<div class="login">
+
+<p>Have an Account? <a href="{% url 'user_login' %}">Login</a> </p>
+</div>
+
+
+{% comment %}
+<div class="container">
+  <form method = 'post'>
+    {% csrf_token %}
+    {{form_test|crispy}}
+<button type="submit" name="button" class="btn btn-primary">Second</button>
+</form>
+</div>
+{% endcomment %}
+
+<br>
+<a href="#" data-id='test' class='testlike'>TEST</a>
+<span class = 'tl'></span>
+</center>
+<script>
+{% block domready %}
+$('a.testlike').click(function(e){
+e.preventDefault();
+$.post('{% url "testaj" %}',
+{
+id: $(this).data('id'),
+td:"this is a test"
+},
+ function (){
+//
+//$.('span.tl').text('test test');
+ }
+
+);
+});
+{% endblock %}
+</script>
+
+
+{% endblock %}

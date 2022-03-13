@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}  Images List{% endblock %}
+
+{% block css_block %}
+<style>
+.zoom {
+  transition: transform .2s; /* Animation */
+  width: 200px;
+  height: 200px;
+  margin: 0 auto;
+}
+
+.zoom:hover {
+  -ms-transform: scale(1.5); /* IE 9 */
+  -webkit-transform: scale(1.5); /* Safari 3-8 */
+  transform: scale(1.5);
+}
+</style>
+{% endblock %}
+
+{% block body_block %}
+<div class = "jumbotron" style="background-color: orange;color:white;text-align: center;">
+<h2>Images uploaded</h2>
+</div>
+
+{% if request.user.is_authenticated %}
+<div class="container">
+	<div class="row">
+		<div class="col-lg-2" style="text-align:center;">
+<a href="#"><span class="glyphicon glyphicon-log-in"></span> Welcome, {{request.user}}</a>
+</div>
+
+	<div class ="col-lg-2" style="text-align:center;">
+		<a href="{% url 'display' %}"><span>Show All</span>
+	</div>
+{% comment %}
+		<div class="col-lg-2" style="text-align:center;">
+<a href = "{% url 'upload' %}"><span>Upload More...</span></a>
+</div>
+{% endcomment %}
+
+<div class="col-lg-2" style="text-align:center;">
+<a href="{% url 'logout' %}"><span class="glyphicon glyphicon-"></span> Log out</a>
+</div>
+
+<div class="col-lg-4" style="text-align:center;">
+Number of uploads/shares:
+  <span style="color:blue;"><strong>{{ images.count}}/{{shared_imgs.count}}</strong></<span>
+</div>
+
+
+</div>
+
+</div>
+
+<hr>
+
+<div class = "container"><strong>Shared Images</strong>
+
+	<div class="row">
+		{% for sh in shared_imgs %}
+		<div class="col-lg-4 zoom"  style = "text-align: center;">
+					{{sh.post.id}}, <a href="#" data-toggle="tooltip"
+					 title="Originally Uploaded by {{sh.post.uploaded_by}}">
+						<img src = "{{sh.post.your_image.url}}" class="rounded-circle"
+				style = "width:30%;display:auto;padding-bottom:5px;"></a><br>
+		</div>
+		{% endfor %}
+</div>
+</div>
+
+<br>
+<hr>
+<center>
+<h4 class="font-weight-bold"><font color="purple">Your uploads</font></h4>
+</center>
+	{% for image in images %}
+		<div class = "container">
+			<div class="row">
+				<div class="col-lg-4" style = "text-align: center;">
+
+				</div>
+
+			<div class="col-lg-8">
+				<p>On  {{ image.upload_date|date:"D d M Y"  }}
+					at {{image.upload_date|time:"g:i A T"}}, <font color ="red">{{ image.uploaded_by }}</font> uploads..</p>
+					<a href="#">
+					<img src="{{ image.your_image.url }}" class="img-responsive"
+                         style="width: 70%;  display:auto;" />
+                     </a>
+		{# <a href="{% url 'delete_items' image.id %}"><span>Delete</span></a> #}
+
+</div>
+
+			</div>
+</div>
+{% endfor %}
+
+{% else %}
+<strong>You must sign in to view images. If you don't have an accout, create one!</strong>
+<li><a href="{% url 'user_login' %}"><span class="glyphicon glyphicon-user"></span> Log in</a></li>
+<li><a href="{% url 'signup' %}"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+{% endif %}
+
+{% endblock %}
